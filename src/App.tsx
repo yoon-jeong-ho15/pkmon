@@ -2,10 +2,10 @@ import Home from "./pages/Home";
 import Start from "./pages/Start";
 
 function App() {
-  // const hasData = localStorage.getItem("pkmon_data");
-  const skipStart = false;
+  const hasData = localStorage.getItem("pkmon-storage");
+  const skipStart = true;
 
-  return skipStart ? <Home /> : <Start />;
+  return hasData && skipStart ? <Home /> : <Start />;
 }
 
 export default App;

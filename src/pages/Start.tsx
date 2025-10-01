@@ -1,13 +1,16 @@
 import Dialogue from "../components/start/Dialogue";
 import NameInput from "../components/start/NameInput";
 import Starters from "../components/start/Starters";
+import { initializeGame } from "../lib/utils";
 import { useStartStore } from "../store/useStartStore";
 
 export default function Start() {
   const step = useStartStore((state) => state.step);
   const goBack = useStartStore((state) => state.goBack);
   const goNext = useStartStore((state) => state.goNext);
+  const username = useStartStore((state) => state.username);
   const starter = useStartStore((state) => state.starter);
+  const starterName = useStartStore((state) => state.starterName);
 
   if (step === "menu") {
     return (
@@ -51,10 +54,14 @@ export default function Start() {
           <Starters />
         </div>
         <div className="w-full h-1/2 border-4 bg-white p-5 flex flex-col">
-          <div className="h-5/6">You chose '{starter}' right?</div>
+          <div className="h-5/6">You chose '{starterName}' right?</div>
           <div className="flex h-1/6 justify-end items-center">
             <button
-              onClick={() => alert("save in localStorage")}
+              onClick={() => {
+                initializeGame(username, starter);
+                window.location.href = "/";
+                //react-router의 navigate()를 써야할까?
+              }}
               className="bg-black text-white px-3 py-1 text-xl hover:bg-gray-800"
             >
               Confirm
@@ -64,39 +71,4 @@ export default function Start() {
       </div>
     );
   }
-
-  // return (
-  //   <div className="flex flex-col items-center justify-center h-full p-8">
-  //     <div className="bg-white border-4 border-black p-8 max-w-2xl w-full">
-  //       <h1 className="text-2xl mb-2 text-center">Hello, {playerName}!</h1>
-  //       <p className="text-lg mb-6 text-center">
-  //         Choose your starter Packet Monster:
-  //       </p>
-
-  //       <div className="grid grid-cols-3 gap-4">
-  //         {["FireMon", "WaterMon", "GrassMon"].map((starter) => (
-  //           <button
-  //             key={starter}
-  //             onClick={() => handleStarterSelect(starter)}
-  //             className={`border-4 border-black p-6 text-lg hover:bg-gray-100 ${
-  //               selectedStarter === starter ? "bg-yellow-200" : "bg-white"
-  //             }`}
-  //           >
-  //             <div className="text-4xl mb-2">🔥💧🌿</div>
-  //             <div>{starter}</div>
-  //           </button>
-  //         ))}
-  //       </div>
-
-  //       {selectedStarter && (
-  //         <button
-  //           className="w-full mt-6 bg-black text-white px-6 py-3 text-lg hover:bg-gray-800"
-  //           onClick={() => console.log("Start game with", selectedStarter)}
-  //         >
-  //           Start Adventure!
-  //         </button>
-  //       )}
-  //     </div>
-  //   </div>
-  // );
 }

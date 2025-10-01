@@ -51,6 +51,11 @@ export default function NameInput() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && name.trim()) {
+                  handleSubmit();
+                }
+              }}
               className="border-2 border-black px-3 py-1"
               placeholder="Enter your name"
               autoFocus

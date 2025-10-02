@@ -35,6 +35,8 @@ export function initializeGame(username: string, starterId: number) {
     userId: uuidv4(),
     username,
     leadPkmon: starter,
+    joinedAt: Date.now(),
+    playTime: 0,
   };
 
   localStorage.setItem("pkmon-storage", JSON.stringify({ state: gameData }));

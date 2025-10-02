@@ -1,20 +1,46 @@
+import Header from "../components/home/Header";
+import PkmonStatus from "../components/home/PkmonStatus";
+import TrainerStatus from "../components/home/TrainerStatus";
+import WalkingAnimation from "../components/home/WalkingAnimation";
+import { useGameStore } from "../store/useGameStore";
+
 export default function Home() {
-  const openOptions = () => {
-    window.open("/option.html", "_blank");
-  };
+  const encounterEnabled = useGameStore(
+    (state) => state.settings.encounterEnabled
+  );
 
   return (
-    <div className="flex flex-col items-center h-full bg-green-100">
-      <div className="w-full h-1/16 bg-gray-50 flex">
-        <button
-          onClick={openOptions}
-          className="ml-auto px-4 py-2 bg-black text-white hover:bg-gray-800"
+    <div className="flex flex-col items-center w-full h-full bg-green-100 text-xl">
+      <Header className="h-1/10" />
+
+      <div className="w-full h-9/10 flex flex-col">
+        <div
+          className={`w-full h-1/2 grid gap-3 p-3 ${
+            encounterEnabled ? "grid-cols-4 h-3/4" : "grid-cols-2 h-1/2"
+          }`}
         >
-          Options
-        </button>
+          {encounterEnabled ? (
+            <>
+              <WalkingAnimation />
+              <PkmonStatus variant="compact" />
+            </>
+          ) : (
+            <>
+              <TrainerStatus />
+              <PkmonStatus />
+            </>
+          )}
+        </div>
+
+        <div className={`w-full flex-1 grid grid-cols-3 gap-3 p-3 bg-sky-100`}>
+          <button className="pixel-gradient rounded border"></button>
+          <button className="pixel-gradient rounded border"></button>
+          <button className="pixel-gradient rounded border"></button>
+          <button className="pixel-gradient rounded border"></button>
+          <button className="pixel-gradient rounded border"></button>
+          <button className="pixel-gradient rounded border"></button>
+        </div>
       </div>
-      <div className="border w-full flex-1"></div>
-      <div className="w-full h-1/8 bg-gray-50"></div>
     </div>
   );
 }

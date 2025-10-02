@@ -5,11 +5,13 @@ import type { Pkmon } from "../lib/type";
 type Settings = {
   notification: boolean;
   volume: number;
+  encounterEnabled: boolean;
 };
 
 const defaultSettings: Settings = {
   notification: true,
   volume: 50,
+  encounterEnabled: true,
 };
 
 type GameState = {
@@ -18,10 +20,17 @@ type GameState = {
   leadPkmon: Pkmon | null;
   pkmons: Pkmon[];
   settings: Settings;
+  joinedAt: number;
+  playTime: number;
+  pkmonsCaught: number;
+  totalEncounters: number;
   setUsername: (username: string) => void;
   setLeadPkmon: (pkmon: Pkmon) => void;
   addPkmon: (pkmon: Pkmon) => void;
   updateSettings: (settings: Partial<Settings>) => void;
+  updatePlayTime: (seconds: number) => void;
+  incrementPkmonsCaught: () => void;
+  incrementTotalEncounters: () => void;
 };
 
 export const useGameStore = create<GameState>()(
@@ -32,6 +41,10 @@ export const useGameStore = create<GameState>()(
       leadPkmon: null,
       pkmons: [],
       settings: defaultSettings,
+      joinedAt: Date.now(),
+      playTime: 0,
+      pkmonsCaught: 0,
+      totalEncounters: 0,
       setUsername: (username) => set({ username }),
       setLeadPkmon: (pkmon) => set({ leadPkmon: pkmon }),
       addPkmon: (pkmon) =>
@@ -40,6 +53,12 @@ export const useGameStore = create<GameState>()(
         set((state) => ({
           settings: { ...state.settings, ...newSettings },
         })),
+      updatePlayTime: (seconds) =>
+        set((state) => ({ playTime: state.playTime + seconds })),
+      incrementPkmonsCaught: () =>
+        set((state) => ({ pkmonsCaught: state.pkmonsCaught + 1 })),
+      incrementTotalEncounters: () =>
+        set((state) => ({ totalEncounters: state.totalEncounters + 1 })),
     }),
     {
       name: "pkmon-storage",
@@ -57,6 +76,10 @@ export const useGameStore = create<GameState>()(
             ...defaultSettings,
             ...(persistedState?.settings || {}),
           },
+          joinedAt: persistedState?.joinedAt || Date.now(),
+          playTime: persistedState?.playTime || 0,
+          pkmonsCaught: persistedState?.pkmonsCaught || 0,
+          totalEncounters: persistedState?.totalEncounters || 0,
         };
       },
     }

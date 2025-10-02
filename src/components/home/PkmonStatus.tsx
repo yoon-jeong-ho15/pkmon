@@ -32,9 +32,6 @@ export default function PkmonStatus({
             {/* 이름/레벨 */}
             <h3 className="font-bold">{leadPkmon.name}</h3>
             <p className="text-gray-600">Lv. {leadPkmon.level}</p>
-
-            {/* ATK */}
-            <span>ATK: {leadPkmon.atk}</span>
           </div>
 
           {/* sprite */}
@@ -85,9 +82,13 @@ export default function PkmonStatus({
                 />
               </div>
             </div>
-          </div>
 
-          <div className="w-full grid grid-cols-2 gap-2"></div>
+            {/* ATK & DEF */}
+            <div className="flex gap-4 justify-center">
+              <span>ATK: {leadPkmon.atk}</span>
+              <span>DEF: {leadPkmon.def}</span>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -161,9 +162,10 @@ export default function PkmonStatus({
             </div>
           </div>
 
-          {/* 공격력 */}
-          <div>
+          {/* 공격력 & 방어력 */}
+          <div className="flex gap-4">
             <span>ATK: {leadPkmon.atk}</span>
+            <span>DEF: {leadPkmon.def}</span>
           </div>
         </div>
       </div>

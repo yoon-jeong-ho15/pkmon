@@ -16,7 +16,7 @@ export default function Home() {
       <div className="w-full h-9/10 flex flex-col">
         <div
           className={`w-full h-1/2 grid gap-3 p-3 ${
-            encounterEnabled ? "grid-cols-4 h-3/4" : "grid-cols-2 h-1/2"
+            encounterEnabled ? "grid-cols-4 h-2/3" : "grid-cols-2 h-1/2"
           }`}
         >
           {encounterEnabled ? (

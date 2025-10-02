@@ -19,3 +19,16 @@ body {
   width: 800px;
   height: 600px;
 }
+
+@keyframes bounce-fast {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce-fast {
+  animation: bounce-fast 0.5s ease-in-out infinite;
+}

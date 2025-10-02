@@ -5,7 +5,7 @@ export const PKMON_SPECIES: PkmonSpecies[] = [
   {
     id: 1,
     name: "Flambit",
-    sprite: "🔥",
+    sprite: "1",
     rarity: "common",
     baseStats: { hp: 20, sp: 10, atk: 6 },
     growth: { hp: 3, sp: 2, atk: 1 },
@@ -13,7 +13,7 @@ export const PKMON_SPECIES: PkmonSpecies[] = [
   {
     id: 2,
     name: "Aquabit",
-    sprite: "💧",
+    sprite: "2",
     rarity: "common",
     baseStats: { hp: 22, sp: 12, atk: 5 },
     growth: { hp: 3, sp: 2, atk: 1 },
@@ -21,7 +21,7 @@ export const PKMON_SPECIES: PkmonSpecies[] = [
   {
     id: 3,
     name: "Leafbit",
-    sprite: "🌿",
+    sprite: "3",
     rarity: "common",
     baseStats: { hp: 21, sp: 11, atk: 5 },
     growth: { hp: 3, sp: 2, atk: 1 },

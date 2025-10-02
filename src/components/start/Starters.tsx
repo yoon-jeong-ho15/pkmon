@@ -24,10 +24,16 @@ export function StarterCard({ pkmon }: { pkmon: PkmonSpecies }) {
       }`}
     >
       <div
-        className="h-5/6 w-full border flex items-center justify-center text-6xl cursor-pointer"
+        className="h-5/6 w-full border flex items-center justify-center cursor-pointer"
         onClick={() => setStarter(pkmon.id, pkmon.name)}
       >
-        {pkmon.sprite}
+        <img
+          src={`/sprites/${pkmon.sprite}.svg`}
+          alt={pkmon.name}
+          className={`max-w-full max-h-full object-contain ${
+            starter === pkmon.id ? "animate-bounce-fast" : ""
+          }`}
+        />
       </div>
       <span>{pkmon.name}</span>
     </div>

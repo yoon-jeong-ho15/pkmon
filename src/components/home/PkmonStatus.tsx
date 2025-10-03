@@ -25,7 +25,10 @@ export default function PkmonStatus({
   if (variant === "compact") {
     return (
       <div
-        className={`h-full border-2 border-gray-800 p-2 pixel-font text-xl pixel-gradient rounded overflow-hidden`}
+        className={`
+          h-full border-2 border-gray-800 
+          p-2 text-xl pixel-gradient
+          rounded overflow-hidden`}
       >
         <div className="flex flex-col gap-2 items-center h-full">
           <div className="flex gap-4">
@@ -39,7 +42,7 @@ export default function PkmonStatus({
             <img
               src={`/sprites/${leadPkmon.sprite}.svg`}
               alt={leadPkmon.name}
-              className="pixelated max-w-full max-h-full animate-bounce-fast"
+              className="w-full h-full animate-bounce-fast"
               style={{ "--bounce-distance": "5px" } as React.CSSProperties}
             />
           </div>
@@ -99,9 +102,8 @@ export default function PkmonStatus({
       className={`border-2 border-gray-800 p-4 pixel-font text-xl pixel-gradient rounded ${className}`}
     >
       <div className="flex h-full gap-4 items-center">
-        {/* sprite */}
         {/* sprite*/}
-        <div className="w-1/2 h-full flex flex-col jus">
+        <div className="w-1/2 h-full flex flex-col">
           <div>
             <h3>Packet Mon</h3>
           </div>
@@ -109,22 +111,21 @@ export default function PkmonStatus({
             <img
               src={`/sprites/${leadPkmon.sprite}.svg`}
               alt={leadPkmon.name}
-              className="pixelated max-w-full max-h-full animate-bounce-fast"
+              className="w-full h-full animate-bounce-fast"
               style={{ "--bounce-distance": "5px" } as React.CSSProperties}
             />
           </div>
         </div>
 
         {/* 상태 정보 */}
-        <div className="flex-1">
-          <div className="flex justify-between items-start mb-2">
-            <div>
-              <h3 className="font-bold">{leadPkmon.name}</h3>
-              <p className="text-gray-600">Lv. {leadPkmon.level}</p>
-            </div>
+        <div className="w-1/2 h-full flex flex-col">
+          {/* 이름, 레벨 */}
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="font-bold text-3xl">{leadPkmon.name}</h3>
+            <p className="text-gray-600">Lv. {leadPkmon.level}</p>
           </div>
 
-          {/* HP 바 */}
+          {/* HP */}
           <div className="mb-2">
             <div className="flex justify-between mb-1">
               <span>HP</span>
@@ -146,7 +147,7 @@ export default function PkmonStatus({
             </div>
           </div>
 
-          {/* SP 바 */}
+          {/* SP */}
           <div className="mb-2">
             <div className="flex justify-between mb-1">
               <span>SP</span>
@@ -163,7 +164,7 @@ export default function PkmonStatus({
           </div>
 
           {/* 공격력 & 방어력 */}
-          <div className="flex gap-4">
+          <div className="flex text-2xl justify-around">
             <span>ATK: {leadPkmon.atk}</span>
             <span>DEF: {leadPkmon.def}</span>
           </div>

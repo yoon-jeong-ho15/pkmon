@@ -11,7 +11,7 @@ type Settings = {
 const defaultSettings: Settings = {
   notification: true,
   volume: 50,
-  encounterEnabled: true,
+  encounterEnabled: false,
 };
 
 type GameState = {

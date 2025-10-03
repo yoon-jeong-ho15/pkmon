@@ -8,6 +8,7 @@ export function createMonster(species: PkmonSpecies, level: number = 1): Pkmon {
   const maxHp = baseStats.hp + (level - 1) * growth.hp;
   const maxSp = baseStats.sp + (level - 1) * growth.sp;
   const atk = baseStats.atk + (level - 1) * growth.atk;
+  const def = baseStats.def + (level - 1) * growth.def;
 
   return {
     id: species.id,
@@ -19,6 +20,7 @@ export function createMonster(species: PkmonSpecies, level: number = 1): Pkmon {
     sp: maxSp,
     maxSp,
     atk,
+    def,
   };
 }
 

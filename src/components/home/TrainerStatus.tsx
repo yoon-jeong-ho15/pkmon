@@ -31,14 +31,14 @@ export default function TrainerStatus() {
             <img
               src="/sprites/t1.svg"
               alt="Trainer"
-              className="pixelated max-w-full max-h-full"
+              className="w-full h-full"
             />
           </div>
         </div>
 
         {/* 트레이너 정보 */}
-        <div className="w-1/2 h-full flex flex-col just">
-          <div className="">
+        <div className="w-1/2 h-full flex flex-col">
+          <div className="flex justify-between items-center mb-3">
             <h3 className="text-4xl">{username}</h3>
           </div>
 

@@ -1,8 +1,8 @@
 export type Pkmon = {
   id: number;
   name: string;
-  sprite: string;
   level: number;
+  exp: number;
   hp: number;
   maxHp: number;
   sp: number;
@@ -14,7 +14,6 @@ export type Pkmon = {
 export type PkmonSpecies = {
   id: number;
   name: string;
-  sprite: string;
   rarity: "starter" | "common" | "uncommon" | "rare" | "epic" | "legendary";
   baseStats: {
     hp: number;

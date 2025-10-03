@@ -6,12 +6,21 @@ import WalkingAnimation from "../components/home/WalkingAnimation";
 import { useGameStore } from "../store/useGameStore";
 import BasicModal from "../components/modal/BaiscModal";
 import { DevConsole } from "../components/dev/DevConsole";
+import { EncounterNotification } from "../components/EncounterNotification";
 
 type ModalType = "pakeDex" | null;
 
 export default function Home() {
   const encounterEnabled = useGameStore(
     (state) => state.settings.encounterEnabled
+  );
+  const encounteredPkmon = useGameStore((state) => state.encounteredPkmon);
+  const setEncounteredPkmon = useGameStore(
+    (state) => state.setEncounteredPkmon
+  );
+  const addPkmon = useGameStore((state) => state.addPkmon);
+  const incrementPkmonsCaught = useGameStore(
+    (state) => state.incrementPkmonsCaught
   );
   const [modalType, setModalType] = useState<ModalType>(null);
 
@@ -53,6 +62,19 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/30 flex items-center justify-center z-10">
           <BasicModal type={modalType} onClose={() => setModalType(null)} />
         </div>
+      )}
+      {encounteredPkmon && (
+        <EncounterNotification
+          monster={encounteredPkmon}
+          onCapture={() => {
+            addPkmon(encounteredPkmon);
+            incrementPkmonsCaught();
+            setEncounteredPkmon(null);
+          }}
+          onFlee={() => {
+            setEncounteredPkmon(null);
+          }}
+        />
       )}
       <DevConsole />
     </div>

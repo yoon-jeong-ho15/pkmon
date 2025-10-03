@@ -1,10 +1,43 @@
 import { v4 as uuidv4 } from "uuid";
-import { PKMON_SPECIES } from "./pkmons";
-import type { Pkmon, PkmonSpecies } from "./type";
+import { PKMON_SPECIES } from "../data/pkmons";
+import type { PkmonSpecies, Pkmon } from "../data/type";
+
+export function getExpForLevel(level: number): number {
+  if (level <= 1) return 0;
+  return Math.floor(Math.pow(level, 3) * 0.8);
+}
+
+export function getLevelFromExp(exp: number): number {
+  let level = 1;
+  while (getExpForLevel(level + 1) <= exp) {
+    level++;
+  }
+  return level;
+}
+
+export function getExpToNextLevel(currentExp: number): {
+  current: number;
+  needed: number;
+  percentage: number;
+} {
+  const currentLevel = getLevelFromExp(currentExp);
+  const currentLevelExp = getExpForLevel(currentLevel);
+  const nextLevelExp = getExpForLevel(currentLevel + 1);
+
+  const expInCurrentLevel = currentExp - currentLevelExp;
+  const expNeededForLevel = nextLevelExp - currentLevelExp;
+
+  return {
+    current: expInCurrentLevel,
+    needed: expNeededForLevel,
+    percentage: (expInCurrentLevel / expNeededForLevel) * 100,
+  };
+}
 
 export function createMonster(species: PkmonSpecies, level: number = 1): Pkmon {
   const { baseStats, growth } = species;
 
+  const exp = getExpForLevel(level);
   const maxHp = baseStats.hp + (level - 1) * growth.hp;
   const maxSp = baseStats.sp + (level - 1) * growth.sp;
   const atk = baseStats.atk + (level - 1) * growth.atk;
@@ -13,8 +46,8 @@ export function createMonster(species: PkmonSpecies, level: number = 1): Pkmon {
   return {
     id: species.id,
     name: species.name,
-    sprite: species.sprite,
     level,
+    exp,
     hp: maxHp,
     maxHp,
     sp: maxSp,

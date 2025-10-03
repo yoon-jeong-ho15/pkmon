@@ -1,6 +1,6 @@
 import { useStartStore } from "../../store/useStartStore";
-import { PKMON_SPECIES } from "../../lib/pkmons";
-import type { PkmonSpecies } from "../../lib/type";
+import { PKMON_SPECIES } from "../../data/pkmons";
+import type { PkmonSpecies } from "../../data/type";
 
 export default function Starters() {
   const starters = PKMON_SPECIES.filter((pkmon) => pkmon.id <= 3);

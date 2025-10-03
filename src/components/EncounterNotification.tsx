@@ -1,51 +1,53 @@
-import { useEffect, useState } from 'react'
-
-interface Monster {
-  name: string
-  level: number
-  sprite: string
-}
+import { useEffect, useState } from "react";
+import type { Pkmon } from "../data/type";
 
 interface EncounterNotificationProps {
-  monster: Monster
-  onCapture: () => void
-  onFlee: () => void
+  monster: Pkmon;
+  onCapture: () => void;
+  onFlee: () => void;
 }
 
-export function EncounterNotification({ monster, onCapture, onFlee }: EncounterNotificationProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isShaking, setIsShaking] = useState(false)
+export function EncounterNotification({
+  monster,
+  onCapture,
+  onFlee,
+}: EncounterNotificationProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [isShaking, setIsShaking] = useState(false);
 
   useEffect(() => {
     // 등장 애니메이션
-    setTimeout(() => setIsVisible(true), 100)
-  }, [])
+    setTimeout(() => setIsVisible(true), 100);
+  }, []);
 
   const handleCapture = () => {
-    setIsShaking(true)
+    setIsShaking(true);
     setTimeout(() => {
-      onCapture()
-    }, 600)
-  }
+      onCapture();
+    }, 600);
+  };
 
   return (
     <div
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center z-[999999] transition-all duration-300 ${
-        isVisible ? 'bg-black/85 pointer-events-auto' : 'bg-black/0 pointer-events-none'
+        isVisible
+          ? "bg-black/85 pointer-events-auto"
+          : "bg-black/0 pointer-events-none"
       }`}
     >
       <div
         className={`bg-gradient-to-br from-[#16213e] to-[#0f3460] border-4 border-[#e94560] rounded-2xl p-6 max-w-[400px] w-[90%] shadow-[0_8px_32px_rgba(233,69,96,0.5)] font-mono transition-all duration-300 ${
-          isVisible ? 'scale-100 opacity-100' : 'scale-75 opacity-0'
-        } ${isShaking ? 'animate-[shake_0.6s_ease]' : ''}`}
+          isVisible ? "scale-100 opacity-100" : "scale-75 opacity-0"
+        } ${isShaking ? "animate-[shake_0.6s_ease]" : ""}`}
         style={{
-          animation: isShaking
-            ? 'shake 0.6s ease'
-            : undefined,
+          animation: isShaking ? "shake 0.6s ease" : undefined,
         }}
       >
         <div className="flex justify-between items-center mb-6">
-          <span className="text-lg font-bold text-[#e94560] tracking-wide animate-pulse" style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.3)' }}>
+          <span
+            className="text-lg font-bold text-[#e94560] tracking-wide animate-pulse"
+            style={{ textShadow: "2px 2px 0 rgba(0,0,0,0.3)" }}
+          >
             ⚡ WILD MONSTER APPEARED!
           </span>
           <button
@@ -58,10 +60,18 @@ export function EncounterNotification({ monster, onCapture, onFlee }: EncounterN
 
         <div className="bg-[#1a1a2e] border-[3px] border-[#0f3460] rounded-xl p-6 mb-6 flex flex-col items-center gap-4">
           <div className="text-[96px] w-32 h-32 flex items-center justify-center bg-[#0f3460] rounded-full border-4 border-[#e94560] shadow-[0_0_20px_rgba(233,69,96,0.5)] animate-[float_3s_ease-in-out_infinite]">
-            {monster.sprite}
+            <img
+              src={`/sprites/${monster.id}.svg`}
+              alt={monster.name}
+              className="w-full h-full object-contain animate-bounce-fast"
+              style={{ "--bounce-distance": "5px" } as React.CSSProperties}
+            />
           </div>
           <div className="text-center">
-            <h2 className="text-[28px] font-bold text-[#e94560] m-0 mb-2" style={{ textShadow: '2px 2px 0 rgba(0,0,0,0.3)' }}>
+            <h2
+              className="text-[28px] font-bold text-[#e94560] m-0 mb-2"
+              style={{ textShadow: "2px 2px 0 rgba(0,0,0,0.3)" }}
+            >
               {monster.name}
             </h2>
             <p className="text-base text-gray-500 m-0">LV.{monster.level}</p>
@@ -102,5 +112,5 @@ export function EncounterNotification({ monster, onCapture, onFlee }: EncounterN
         }
       `}</style>
     </div>
-  )
+  );
 }

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Pkmon } from "../lib/type";
+import type { Pkmon } from "../data/type";
 
 type Settings = {
   notification: boolean;
@@ -24,6 +24,8 @@ type GameState = {
   playTime: number;
   pkmonsCaught: number;
   totalEncounters: number;
+  stepCount: number;
+  encounteredPkmon: Pkmon | null;
   setUsername: (username: string) => void;
   setLeadPkmon: (pkmon: Pkmon) => void;
   addPkmon: (pkmon: Pkmon) => void;
@@ -31,6 +33,8 @@ type GameState = {
   updatePlayTime: (seconds: number) => void;
   incrementPkmonsCaught: () => void;
   incrementTotalEncounters: () => void;
+  incrementStepCount: () => void;
+  setEncounteredPkmon: (pkmon: Pkmon | null) => void;
 };
 
 export const useGameStore = create<GameState>()(
@@ -45,6 +49,8 @@ export const useGameStore = create<GameState>()(
       playTime: 0,
       pkmonsCaught: 0,
       totalEncounters: 0,
+      stepCount: 0,
+      encounteredPkmon: null,
       setUsername: (username) => set({ username }),
       setLeadPkmon: (pkmon) => set({ leadPkmon: pkmon }),
       addPkmon: (pkmon) =>
@@ -59,6 +65,9 @@ export const useGameStore = create<GameState>()(
         set((state) => ({ pkmonsCaught: state.pkmonsCaught + 1 })),
       incrementTotalEncounters: () =>
         set((state) => ({ totalEncounters: state.totalEncounters + 1 })),
+      incrementStepCount: () =>
+        set((state) => ({ stepCount: state.stepCount + 1 })),
+      setEncounteredPkmon: (pkmon) => set({ encounteredPkmon: pkmon }),
     }),
     {
       name: "pkmon-storage",
@@ -80,6 +89,7 @@ export const useGameStore = create<GameState>()(
           playTime: persistedState?.playTime || 0,
           pkmonsCaught: persistedState?.pkmonsCaught || 0,
           totalEncounters: persistedState?.totalEncounters || 0,
+          stepCount: persistedState?.stepCount || 0,
         };
       },
     }

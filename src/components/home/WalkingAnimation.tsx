@@ -7,18 +7,14 @@ export default function WalkingAnimation({
     <div
       className={`${className} 
       h-full col-span-3 flex items-center justify-center
-      overflow-hidden rounded-lg border-2
+      overflow-hidden rounded-lg border-2 w-3/4
       `}
       style={{
         backgroundImage: "url(/sprites/road.gif)",
         backgroundSize: "cover",
       }}
     >
-      <img
-        src="/sprites/t1.gif"
-        alt="Walking animation"
-        className="pixel-art"
-      />
+      <img src="/sprites/t1.gif" alt="Walking animation" className="" />
     </div>
   );
 }

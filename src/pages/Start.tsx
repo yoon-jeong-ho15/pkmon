@@ -50,7 +50,7 @@ export default function Start() {
         >
           back
         </button>
-        <div className="w-full h-1/2 border-4 bg-white grid grid-cols-3 gap-2 p-2">
+        <div className="w-full h-1/2 border-4 bg-white flex gap-2 p-2">
           <Starters />
         </div>
         <div className="w-full h-1/2 border-4 bg-white p-5 flex flex-col">

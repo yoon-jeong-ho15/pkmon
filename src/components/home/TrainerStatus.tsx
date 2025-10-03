@@ -20,7 +20,7 @@ export default function TrainerStatus() {
   };
 
   return (
-    <div className="border-2 border-gray-800 p-4 pixel-font text-xl pixel-gradient rounded">
+    <div className="border-2 border-gray-800 p-4 h-full w-1/2 text-xl pixel-gradient rounded">
       <div className="flex h-full gap-4 items-center">
         {/* sprite*/}
         <div className="w-1/2 h-full flex flex-col">

@@ -5,8 +5,6 @@ export type Pkmon = {
   exp: number;
   hp: number;
   maxHp: number;
-  sp: number;
-  maxSp: number;
   atk: number;
   def: number;
 };
@@ -17,14 +15,20 @@ export type PkmonSpecies = {
   rarity: "starter" | "common" | "uncommon" | "rare" | "epic" | "legendary";
   baseStats: {
     hp: number;
-    sp: number;
     atk: number;
     def: number;
   };
   growth: {
     hp: number;
-    sp: number;
     atk: number;
     def: number;
   };
+};
+
+export type ModalType = "pakeDex" | "myPkMons" | "inventory";
+
+export const MODAL_LABELS: Record<ModalType, string> = {
+  pakeDex: "PakeDex",
+  myPkMons: "My PkMons",
+  inventory: "Inventory",
 };

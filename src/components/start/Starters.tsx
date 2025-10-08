@@ -28,7 +28,7 @@ export function StarterCard({ pkmon }: { pkmon: PkmonSpecies }) {
         onClick={() => setStarter(pkmon.id, pkmon.name)}
       >
         <img
-          src={`/sprites/${pkmon.id}.svg`}
+          src={`/sprites/pkmon/${pkmon.id}.svg`}
           alt={pkmon.name}
           className={`w-full h-full object-contain ${
             starter === pkmon.id ? "animate-bounce-fast" : ""

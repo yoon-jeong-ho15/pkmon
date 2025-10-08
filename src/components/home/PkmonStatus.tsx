@@ -21,7 +21,6 @@ export default function PkmonStatus({
   }
 
   const hpPercentage = (leadPkmon.hp / leadPkmon.maxHp) * 100;
-  const spPercentage = (leadPkmon.sp / leadPkmon.maxSp) * 100;
   const expProgress = getExpToNextLevel(leadPkmon.exp);
 
   if (variant === "compact") {
@@ -29,7 +28,7 @@ export default function PkmonStatus({
       <div
         className={`
           h-full w-1/4 border-2 border-gray-800 
-          p-2 text-xl pixel-gradient
+          p-2 text-xl pixel-gradient-10
           rounded flex flex-col gap-2 items-center
           `}
       >
@@ -43,7 +42,7 @@ export default function PkmonStatus({
           {/* sprite */}
           <div className="w-full flex-1 flex items-center justify-center border bg-white min-h-0">
             <img
-              src={`/sprites/${leadPkmon.id}.svg`}
+              src={`/sprites/pkmon/${leadPkmon.id}.svg`}
               alt={leadPkmon.name}
               className="w-full h-full object-contain animate-bounce-fast"
               style={{ "--bounce-distance": "5px" } as React.CSSProperties}
@@ -70,22 +69,6 @@ export default function PkmonStatus({
                     : "bg-red-500"
                 }`}
                 style={{ width: `${hpPercentage}%` }}
-              />
-            </div>
-          </div>
-
-          {/* SP */}
-          <div className="">
-            <div className="flex justify-between mb-1">
-              <span>SP</span>
-              <span>
-                {leadPkmon.sp}/{leadPkmon.maxSp}
-              </span>
-            </div>
-            <div className="w-full bg-gray-300 h-2 border border-gray-800">
-              <div
-                className="h-full bg-blue-500"
-                style={{ width: `${spPercentage}%` }}
               />
             </div>
           </div>
@@ -132,7 +115,7 @@ export default function PkmonStatus({
           </div>
           <div className="w-full flex items-center justify-center border bg-white">
             <img
-              src={`/sprites/${leadPkmon.id}.svg`}
+              src={`/sprites/pkmon/${leadPkmon.id}.svg`}
               alt={leadPkmon.name}
               className="w-full h-full animate-bounce-fast"
               style={{ "--bounce-distance": "5px" } as React.CSSProperties}
@@ -166,22 +149,6 @@ export default function PkmonStatus({
                     : "bg-red-500"
                 }`}
                 style={{ width: `${hpPercentage}%` }}
-              />
-            </div>
-          </div>
-
-          {/* SP */}
-          <div className="mb-2">
-            <div className="flex justify-between mb-1">
-              <span>SP</span>
-              <span>
-                {leadPkmon.sp}/{leadPkmon.maxSp}
-              </span>
-            </div>
-            <div className="w-full bg-gray-300 h-2 border border-gray-800">
-              <div
-                className="h-full bg-blue-500"
-                style={{ width: `${spPercentage}%` }}
               />
             </div>
           </div>

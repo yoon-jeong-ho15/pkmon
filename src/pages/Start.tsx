@@ -14,9 +14,17 @@ export default function Start() {
 
   if (step === "menu") {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-amber-100">
-        <div className="text-4xl">Packet Monster</div>
-        <div>
+      <div className="flex flex-col items-center h-full bg-amber-100">
+        <div className="w-1/2 flex items-center justify-center">
+          <img
+            src={`/packetmonster.svg`}
+            alt="logo"
+            className="w-full h-full"
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <div className="text-4xl">Packet Monster</div>
           <button
             onClick={goNext}
             className="bg-black text-white px-8 py-4 text-xl hover:bg-gray-800"

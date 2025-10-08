@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { PKMON_SPECIES } from "../data/pkmons";
+import { ITEMS } from "../data/items";
 import type { PkmonSpecies, Pkmon } from "../data/type";
 
 export function getExpForLevel(level: number): number {
@@ -39,7 +40,6 @@ export function createMonster(species: PkmonSpecies, level: number = 1): Pkmon {
 
   const exp = getExpForLevel(level);
   const maxHp = baseStats.hp + (level - 1) * growth.hp;
-  const maxSp = baseStats.sp + (level - 1) * growth.sp;
   const atk = baseStats.atk + (level - 1) * growth.atk;
   const def = baseStats.def + (level - 1) * growth.def;
 
@@ -50,8 +50,6 @@ export function createMonster(species: PkmonSpecies, level: number = 1): Pkmon {
     exp,
     hp: maxHp,
     maxHp,
-    sp: maxSp,
-    maxSp,
     atk,
     def,
   };
@@ -66,12 +64,24 @@ export function initializeGame(username: string, starterId: number) {
 
   const starter = createMonster(species, 1);
 
+  const packetBall = ITEMS.find((item) => item.id === 1);
+  const smallPotion = ITEMS.find((item) => item.id === 2);
+
+  if (!packetBall || !smallPotion) {
+    throw new Error("Default items not found");
+  }
+
   const gameData = {
     userId: uuidv4(),
     username,
     leadPkmon: starter,
     joinedAt: Date.now(),
     playTime: 0,
+    inventory: [
+      { ...packetBall, quantity: 3 },
+      { ...smallPotion, quantity: 3 },
+    ],
+    money: 100,
   };
 
   localStorage.setItem("pkmon-storage", JSON.stringify({ state: gameData }));

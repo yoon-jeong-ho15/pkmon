@@ -25,6 +25,28 @@ export type PkmonSpecies = {
   };
 };
 
+type PotionDefinition = {
+  id: number;
+  name: string;
+  type: "potion";
+  price: number;
+  healAmount: number;
+};
+
+type BallDefinition = {
+  id: number;
+  name: string;
+  type: "ball";
+  price: number;
+  catchRate: number;
+};
+
+export type ItemDefinition = PotionDefinition | BallDefinition;
+
+export type Item = ItemDefinition & {
+  quantity: number;
+};
+
 export type ModalType = "pakeDex" | "myPkMons" | "inventory";
 
 export const MODAL_LABELS: Record<ModalType, string> = {

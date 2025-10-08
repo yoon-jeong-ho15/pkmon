@@ -1,27 +1,29 @@
+import type { ModalType } from "../../data/type";
+import { MODAL_LABELS } from "../../data/type";
+import Inventory from "./Inventory";
+import MyPkMons from "./MyPkMons";
 import PakeDex from "./PakeDex";
-
-type ModalType = "pakeDex";
 
 interface BasicModalProps {
   type: ModalType;
   onClose: () => void;
 }
 
-const MODAL_TITLES: Record<ModalType, string> = {
-  pakeDex: "Pake Dex",
-};
-
 export default function BasicModal({ type, onClose }: BasicModalProps) {
   const renderContent = () => {
     switch (type) {
       case "pakeDex":
         return <PakeDex />;
+      case "myPkMons":
+        return <MyPkMons />;
+      case "inventory":
+        return <Inventory />;
       default:
         return null;
     }
   };
 
-  const title = MODAL_TITLES[type];
+  const title = MODAL_LABELS[type];
 
   return (
     <div className="bg-white border rounded-lg w-9/10 h-9/10 flex flex-col overflow-hidden">

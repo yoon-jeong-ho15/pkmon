@@ -1,32 +1,68 @@
 import { useGameStore } from "../../store/useGameStore";
+import { useEffect, useRef, useState } from "react";
 
 export default function Header({ className }: { className: string }) {
-  const { settings, updateSettings } = useGameStore();
+  const { encounterEnabled, setEncounterEnabled } = useGameStore();
+  const startTimeRef = useRef<number | null>(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
+
+  // 타이머 UI 표시용 시작 시간 기록
+  useEffect(() => {
+    if (encounterEnabled) {
+      startTimeRef.current = Date.now();
+    } else {
+      startTimeRef.current = null;
+      setElapsedTime(0);
+    }
+  }, [encounterEnabled]);
+
+  // 타이머 UI 업데이트
+  useEffect(() => {
+    if (!encounterEnabled || startTimeRef.current === null) return;
+
+    const interval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startTimeRef.current!) / 1000);
+      setElapsedTime(elapsed);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [encounterEnabled]);
 
   const openOptions = () => {
     window.open("/option.html", "_blank");
   };
 
   const toggleEncounter = () => {
-    updateSettings({ encounterEnabled: !settings.encounterEnabled });
+    setEncounterEnabled(!encounterEnabled);
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   return (
     <header
       className={`${className} flex items-center bg-gray-100 w-full py-6 border rounded-xl p-1 pixel-gradient`}
     >
-      <button
-        onClick={toggleEncounter}
-        className={`relative w-14 h-8 rounded-full transition-colors duration-300 ml-4 ${
-          settings.encounterEnabled ? "bg-blue-500" : "bg-gray-400"
-        }`}
-      >
-        <div
-          className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform duration-300 ${
-            settings.encounterEnabled ? "translate-x-6" : ""
+      <div className="flex items-center gap-2 ml-4">
+        <button
+          onClick={toggleEncounter}
+          className={`relative w-14 h-8 rounded-full transition-colors duration-300 ${
+            encounterEnabled ? "bg-blue-500" : "bg-gray-400"
           }`}
-        />
-      </button>
+        >
+          <div
+            className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform duration-300 ${
+              encounterEnabled ? "translate-x-6" : ""
+            }`}
+          />
+        </button>
+        {encounterEnabled && (
+          <span className="text-sm font-mono">{formatTime(elapsedTime)}</span>
+        )}
+      </div>
 
       <div className="text-5xl flex-1 flex justify-center mb-2 gap-2">
         <span

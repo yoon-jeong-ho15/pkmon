@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { PKMON_SPECIES } from "../data/pkmons";
 import { ITEMS } from "../data/items";
 import type { PkmonSpecies, Pkmon } from "../data/type";
+import { storage } from "./storage";
 
 export function getExpForLevel(level: number): number {
   if (level <= 1) return 0;
@@ -84,5 +85,5 @@ export function initializeGame(username: string, starterId: number) {
     money: 100,
   };
 
-  localStorage.setItem("pkmon-storage", JSON.stringify({ state: gameData }));
+  storage.setItem("pkmon-storage", JSON.stringify({ state: gameData }));
 }

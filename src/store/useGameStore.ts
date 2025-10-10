@@ -1,17 +1,19 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 import type { Item, Pkmon } from "../data/type";
+import { getLevelFromExp } from "../lib/utils";
+import { PKMON_SPECIES } from "../data/pkmons";
+import { calculateLevelUp } from "../lib/battle";
+import { storage } from "../lib/storage";
 
 type Settings = {
   notification: boolean;
   volume: number;
-  encounterEnabled: boolean;
 };
 
 const defaultSettings: Settings = {
   notification: true,
   volume: 50,
-  encounterEnabled: false,
 };
 
 type GameState = {
@@ -28,6 +30,7 @@ type GameState = {
   encounteredPkmon: Pkmon | null;
   inventory: Item[];
   money: number;
+  encounterEnabled: boolean;
   setUsername: (username: string) => void;
   setLeadPkmon: (pkmon: Pkmon) => void;
   addPkmon: (pkmon: Pkmon) => void;
@@ -39,8 +42,13 @@ type GameState = {
   setEncounteredPkmon: (pkmon: Pkmon | null) => void;
   addItem: (item: Item) => void;
   removeItem: (itemId: number) => void;
-  useItem: (itemId: number) => void;
+  consumeItem: (itemId: number) => void;
   setMoney: (change: number) => void;
+  healLeadPkmon: (amount: number) => void;
+  damageEncounteredPkmon: (damage: number) => void;
+  damageLeadPkmon: (damage: number) => void;
+  addExpToLeadPkmon: (exp: number) => void;
+  setEncounterEnabled: (enabled: boolean) => void;
 };
 
 export const useGameStore = create<GameState>()(
@@ -59,6 +67,7 @@ export const useGameStore = create<GameState>()(
       encounteredPkmon: null,
       inventory: [],
       money: 0,
+      encounterEnabled: false,
       setUsername: (username) => set({ username }),
       setLeadPkmon: (pkmon) => set({ leadPkmon: pkmon }),
       addPkmon: (pkmon) =>
@@ -74,7 +83,10 @@ export const useGameStore = create<GameState>()(
       incrementTotalEncounters: () =>
         set((state) => ({ totalEncounters: state.totalEncounters + 1 })),
       incrementStepCount: () =>
-        set((state) => ({ stepCount: state.stepCount + 1 })),
+        set((state) => ({
+          stepCount: state.stepCount + 1,
+          money: state.money + 1
+        })),
       setEncounteredPkmon: (pkmon) => set({ encounteredPkmon: pkmon }),
       addItem: (item) =>
         set((state) => {
@@ -94,7 +106,7 @@ export const useGameStore = create<GameState>()(
         set((state) => ({
           inventory: state.inventory.filter((i) => i.id !== itemId),
         })),
-      useItem: (itemId) =>
+      consumeItem: (itemId) =>
         set((state) => {
           const item = state.inventory.find((i) => i.id === itemId);
           if (!item) return state;
@@ -110,10 +122,77 @@ export const useGameStore = create<GameState>()(
           };
         }),
       setMoney: (change) => set((state) => ({ money: state.money + change })),
+      healLeadPkmon: (amount) =>
+        set((state) => {
+          if (!state.leadPkmon) return state;
+          const newHp = Math.min(
+            state.leadPkmon.hp + amount,
+            state.leadPkmon.maxHp
+          );
+          return {
+            leadPkmon: { ...state.leadPkmon, hp: newHp },
+          };
+        }),
+      damageEncounteredPkmon: (damage) =>
+        set((state) => {
+          if (!state.encounteredPkmon) return state;
+          const newHp = Math.max(0, state.encounteredPkmon.hp - damage);
+          return {
+            encounteredPkmon: { ...state.encounteredPkmon, hp: newHp },
+          };
+        }),
+      damageLeadPkmon: (damage) =>
+        set((state) => {
+          if (!state.leadPkmon) return state;
+          const newHp = Math.max(0, state.leadPkmon.hp - damage);
+          return {
+            leadPkmon: { ...state.leadPkmon, hp: newHp },
+          };
+        }),
+      addExpToLeadPkmon: (exp) =>
+        set((state) => {
+          if (!state.leadPkmon) return state;
+
+          const species = PKMON_SPECIES.find(
+            (s) => s.id === state.leadPkmon!.id
+          );
+          if (!species) return state;
+
+          // 순수 함수로 레벨업 계산
+          const levelUpResult = calculateLevelUp(
+            state.leadPkmon,
+            species,
+            exp,
+            getLevelFromExp
+          );
+
+          return {
+            leadPkmon: {
+              ...state.leadPkmon,
+              level: levelUpResult.newLevel,
+              exp: levelUpResult.newExp,
+              maxHp: levelUpResult.newMaxHp,
+              atk: levelUpResult.newAtk,
+              def: levelUpResult.newDef,
+            },
+          };
+        }),
+      setEncounterEnabled: (enabled) =>
+        set((state) => {
+          if (!enabled && state.leadPkmon) {
+            // false로 바뀔 때 체력 회복
+            return {
+              encounterEnabled: enabled,
+              leadPkmon: { ...state.leadPkmon, hp: state.leadPkmon.maxHp },
+            };
+          }
+          return { encounterEnabled: enabled };
+        }),
     }),
     {
       name: "pkmon-storage",
       version: 1,
+      storage: createJSONStorage(() => storage),
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       migrate: (state: unknown, version: number) => {
         const persistedState = state as Partial<GameState>;

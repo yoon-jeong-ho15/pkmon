@@ -1,112 +1,38 @@
 import PkmonCard from "./PkmonCard";
-import { useGameStore } from "../../store/useGameStore";
-import { useState, useEffect } from "react";
 import ItemList from "./ItemList";
-import { simulateBattleTurn } from "../../lib/battle";
+import { useBattleState } from "../../hooks/useBattleState";
+import type { Pkmon } from "../../data/type";
 
 interface BattleFieldProps {
+  leadPkmon: Pkmon;
+  encounteredPkmon: Pkmon;
+  onAttack: (playerDamage: number, monsterDamage: number | null) => void;
+  onVictory: (expGained: number) => void;
+  onDefeat: () => void;
   onFlee: () => void;
 }
 
-export default function BattleField({ onFlee }: BattleFieldProps) {
-  const encounteredPkmon = useGameStore((state) => state.encounteredPkmon);
-  const leadPkmon = useGameStore((state) => state.leadPkmon);
-  const damageEncounteredPkmon = useGameStore(
-    (state) => state.damageEncounteredPkmon
-  );
-  const damageLeadPkmon = useGameStore((state) => state.damageLeadPkmon);
-  const addExpToLeadPkmon = useGameStore((state) => state.addExpToLeadPkmon);
-  const setEncounterEnabled = useGameStore(
-    (state) => state.setEncounterEnabled
-  );
-
-  const [itemOpened, setItemOpened] = useState(false);
-  const [battleLog, setBattleLog] = useState<string[]>([]);
-  const [isProcessingTurn, setIsProcessingTurn] = useState(false);
-  const [battleEnded, setBattleEnded] = useState(false);
-
-  // 전투 종료 체크
-  useEffect(() => {
-    if (!encounteredPkmon || !leadPkmon || battleEnded) return;
-
-    // 승리
-    if (encounteredPkmon.hp <= 0) {
-      setBattleEnded(true);
-      setBattleLog((prev) => [
-        ...prev,
-        `${encounteredPkmon.name}을(를) 쓰러뜨렸다!`,
-        `경험치 2를 획득했다!`,
-      ]);
-      addExpToLeadPkmon(2);
-    }
-    // 패배
-    else if (leadPkmon.hp <= 0) {
-      setBattleEnded(true);
-      setBattleLog((prev) => [...prev, `${leadPkmon.name}이(가) 쓰러졌다...`]);
-      setEncounterEnabled(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    encounteredPkmon?.hp,
-    leadPkmon?.hp,
+export default function BattleField({
+  leadPkmon,
+  encounteredPkmon,
+  onAttack,
+  onVictory,
+  onDefeat,
+  onFlee,
+}: BattleFieldProps) {
+  const {
+    battleLog,
+    isProcessingTurn,
     battleEnded,
-    encounteredPkmon?.name,
-    leadPkmon?.name,
-    addExpToLeadPkmon,
-    setEncounterEnabled,
-    onFlee,
-  ]);
-
-  if (!encounteredPkmon || !leadPkmon) return null;
-
-  const handleAttack = () => {
-    if (isProcessingTurn) return;
-    setIsProcessingTurn(true);
-
-    // 순수 함수로 전투 턴 시뮬레이션
-    const turnResult = simulateBattleTurn(leadPkmon, encounteredPkmon);
-
-    // 플레이어 공격 적용
-    damageEncounteredPkmon(turnResult.playerAttack.damage);
-    setBattleLog((prev) => [
-      ...prev,
-      `${turnResult.playerAttack.attackerName}의 공격! ${turnResult.playerAttack.defenderName}에게 ${turnResult.playerAttack.damage} 데미지!`,
-    ]);
-
-    // 몬스터 반격 (있다면)
-    setTimeout(() => {
-      if (turnResult.monsterAttack) {
-        damageLeadPkmon(turnResult.monsterAttack.damage);
-        setBattleLog((prev) => [
-          ...prev,
-          `${turnResult.monsterAttack!.attackerName}의 반격! ${turnResult.monsterAttack!.defenderName}에게 ${turnResult.monsterAttack!.damage} 데미지!`,
-        ]);
-      }
-      setIsProcessingTurn(false);
-    }, 1000);
-  };
-
-  const onItemUsed = () => {
-    if (isProcessingTurn) return;
-    setIsProcessingTurn(true);
-    setItemOpened(false);
-
-    // 아이템 사용 후 몬스터 반격
-    setTimeout(() => {
-      if (encounteredPkmon.hp > 0 && leadPkmon.hp > 0) {
-        const turnResult = simulateBattleTurn(leadPkmon, encounteredPkmon);
-        // 몬스터만 공격 (플레이어는 아이템 사용했으므로)
-        if (turnResult.monsterAttack) {
-          damageLeadPkmon(turnResult.monsterAttack.damage);
-          setBattleLog((prev) => [
-            ...prev,
-            `${turnResult.monsterAttack!.attackerName}의 공격! ${turnResult.monsterAttack!.defenderName}에게 ${turnResult.monsterAttack!.damage} 데미지!`,
-          ]);
-        }
-      }
-      setIsProcessingTurn(false);
-    }, 1000);
-  };
+    itemOpened,
+    handleAttack,
+    handleItemToggle,
+    onItemUsed,
+  } = useBattleState(leadPkmon, encounteredPkmon, {
+    onAttack,
+    onVictory,
+    onDefeat,
+  });
 
   return (
     <div
@@ -170,7 +96,7 @@ export default function BattleField({ onFlee }: BattleFieldProps) {
                 justify-center gap-2
                 hover:opacity-80 transition-opacity
                 ${isProcessingTurn ? "bg-gray-400" : "pixel-gradient"}`}
-                onClick={() => setItemOpened(!itemOpened)}
+                onClick={handleItemToggle}
                 disabled={isProcessingTurn}
               >
                 <span>ITEM</span>

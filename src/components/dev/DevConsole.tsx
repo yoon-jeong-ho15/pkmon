@@ -46,10 +46,10 @@ export const DevConsole = () => {
 
 // 스탯 관련 컨트롤
 const StatsControls = () => {
-  const { leadPkmon, addExperience } = useGameStore();
+  const addExpToLeadPkmon = useGameStore((state) => state.addExpToLeadPkmon);
 
   const addExp = () => {
-    addExperience(leadPkmon, 1000);
+    addExpToLeadPkmon(1000);
     console.log("[DEV] Added 1000 EXP to lead Pkmon");
   };
 

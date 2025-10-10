@@ -85,7 +85,7 @@ export const useGameStore = create<GameState>()(
       incrementStepCount: () =>
         set((state) => ({
           stepCount: state.stepCount + 1,
-          money: state.money + 1
+          money: state.money + 1,
         })),
       setEncounteredPkmon: (pkmon) => set({ encounteredPkmon: pkmon }),
       addItem: (item) =>

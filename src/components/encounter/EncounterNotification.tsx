@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Pkmon } from "../../data/type";
 import PkmonCard from "./PkmonCard";
 import BattleField from "./BattleFIeld";
+import { useGameStore } from "../../store/useGameStore";
 
 interface EncounterNotificationProps {
   pkmon: Pkmon;
@@ -17,17 +18,40 @@ export function EncounterNotification({
   const [isVisible, setIsVisible] = useState(false);
   const [isBattle, setIsBattle] = useState(false);
 
+  const leadPkmon = useGameStore((state) => state.leadPkmon);
+  const damageEncounteredPkmon = useGameStore(
+    (state) => state.damageEncounteredPkmon
+  );
+  const damageLeadPkmon = useGameStore((state) => state.damageLeadPkmon);
+  const addExpToLeadPkmon = useGameStore((state) => state.addExpToLeadPkmon);
+  const setEncounterEnabled = useGameStore(
+    (state) => state.setEncounterEnabled
+  );
+
   useEffect(() => {
     // 등장 애니메이션
     setTimeout(() => setIsVisible(true), 100);
   }, []);
 
-  const handleCapture = () => {
-    setIsShaking(true);
-    setTimeout(() => {
-      onCapture();
-    }, 600);
+  const handleAttack = (playerDamage: number, monsterDamage: number | null) => {
+    if (playerDamage > 0) {
+      damageEncounteredPkmon(playerDamage);
+    }
+    if (monsterDamage !== null && monsterDamage > 0) {
+      damageLeadPkmon(monsterDamage);
+    }
   };
+
+  const handleVictory = (expGained: number) => {
+    addExpToLeadPkmon(expGained);
+    onCapture(); // 전투 승리 시 포켓몬 수집
+  };
+
+  const handleDefeat = () => {
+    setEncounterEnabled(false);
+  };
+
+  if (!leadPkmon) return null;
 
   return (
     <div
@@ -43,9 +67,12 @@ export function EncounterNotification({
     >
       {isBattle ? (
         <BattleField
-          pkmon={pkmon}
+          leadPkmon={leadPkmon}
+          encounteredPkmon={pkmon}
+          onAttack={handleAttack}
+          onVictory={handleVictory}
+          onDefeat={handleDefeat}
           onFlee={onFlee}
-          onBack={() => setIsBattle(false)}
         />
       ) : (
         <div

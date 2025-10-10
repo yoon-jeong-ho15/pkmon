@@ -6,8 +6,6 @@ import StorageControls from "./StorageControls";
 export const DevConsole = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  if (import.meta.env.PROD) return null;
-
   return (
     <>
       {/* 토글 버튼 */}

@@ -194,7 +194,7 @@ export const useGameStore = create<GameState>()(
       version: 1,
       storage: createJSONStorage(() => storage),
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      migrate: (state: unknown, version: number) => {
+      migrate: (state: unknown /*version?: number*/) => {
         const persistedState = state as Partial<GameState>;
         return {
           userId: persistedState?.userId || "",

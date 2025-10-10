@@ -1,69 +1,85 @@
-# React + TypeScript + Vite
+# Packet Monster 패킷몬
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 프로젝트 소개
 
-Currently, two official plugins are available:
+**웹 브라우징** 중 랜덤하게 몬스터를 만나 수집하는 크롬 익스텐션 기반 게임입니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+사용자가 페이지를 이동하거나 새 탭을 열 때 몬스터와의 인카운터가 발생하며,
+팝업 오버레이를 통해 전투 및 수집을 진행합니다.
 
-## Expanding the ESLint configuration
+> 현재 익스텐션으로 이식하기 전에 웹앱상태로 개발중
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 'Packet'
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+네트워크 통신에서 사용되는 데이터 단위인 '패킷'에서 차용했습니다. ('포켓몬'의 '포켓'과 발음이 유사하다는게 주요한 이유입니다.)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+사용자가 웹서핑중에 서버와 주고받는 패킷 사이에 야생의 '패킷몬'이 숨어있다는 설정입니다.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 왜 크롬 익스텐션인가?
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+오리지널 포켓몬 게임 시리즈에서는 사용자의 캐릭터가 이동하고, '포켓몬 Go' 에서는 사용자가 직접 이동하면서 야생의 포켓몬과 만나고 성장합니다.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+이렇게 사용자의 '이동'과 그에 따른 인카운터를 **웹서핑에서도 구현**할 수 있으면 재밌겠다는 생각이 들었습니다.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 개발 계획
+
+### 1. 웹 앱 (현재)
+
+- 개발 콘솔을 통한 수동 인카운터 트리거
+- localStorage를 이용한 게임 데이터 저장
+- 모든 게임 메커니즘 및 UI/UX 완성
+
+### 2. Chrome Extension 마이그레이션
+
+- 페이지 이동 감지로 자동 인카운터 트리거
+- chrome.storage API로 데이터 저장소 전환
+- Content Script를 통한 페이지 모니터링
+- Background 로직 구현
+
+### 3. 클라우드 통합
+
+- Firebase Authentication (Google 계정 연동)
+- Firestore를 통한 유저 데이터 동기화
+- 오프라인 시 localStorage를 fallback으로 사용
+- 레벨업 및 인카운터 확률 등 보안이 중요한 로직은 서버 사이드에서 처리
+
+## 기술 스택
+
+- React 18 + TypeScript
+- Vite
+- TailwindCSS
+- Zustand
+
+## 주요 기능
+
+### 캐릭터 생성
+
+- 스타팅 패킷몬 3 가지중 하나를 선택합니다.
+  - 스타팅 패킷몬은 각자 다른 특징을 가지고 있습니다.
+- 사용자의 이름을 정합니다.
+- 구글 계정에 연동시킵니다.(미구현)
+
+### 랜덤 인카운터
+
+- 토글 버튼을 통해 '모험 모드'를 활성화 시켜야 인카운터가 발생합니다.
+- 플레이어는 페이지 이동시에 일정 확률로 야생의 패킷몬을 마주칩니다.
+- 팝업창이 브라우저 현재 페이지 위에 나타나고 '전투' 혹은 '도망'을 선택합니다.
+  - 설정에 따라 자동 전투로 진행할수 있습니다 (미구현)
+
+### 전투
+
+- 턴제 전투이며, 항상 사용자가 먼저 턴을 가져갑니다.
+- 한 턴에는 공격, 아이템사용, 도망가기중 하나를 한 번 수행합니다.
+- 상대의 hp를 0으로 만들면 승리, 사용자의 hp가 0이 된다면 패배.
+- 아이템 사용을 통해 hp를 회복하거나,
+- 야생 패킷몬을 포획할 수 있습니다. (미구현)
+
+### 성장
+
+- 패킷몬은 고유한 성장치를 가지고있으며 레벨이 올라갈때마다 능력치(hp,atk,def)가 정해진 성장치대로 올라갑니다.
+
+### 수집
+
+- 각 패킷몬마다 희귀도를 설정해 인카운터시에 등장할 확률을 조절합니다.(미구현)
+- 사용자 설정에 따라 자신이 포획한 패킷몬이 어디서 등장했는지 기록할 수 있습니다. (미구현)
+  - `www.google.com/....` 에서 발견했다면 `www.google.com`으로
